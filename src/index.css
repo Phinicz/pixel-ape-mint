@@ -8,54 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* ANONS NFT Design System */
-    --background: 300 20% 8%;
-    --foreground: 0 0% 95%;
+    /* ANONS NFT Design System - Exact Reference Colors */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 100%;
 
-    --card: 300 15% 12%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 300 15% 12%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 0 85% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 28 100% 50%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 280 25% 15%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 280 15% 20%;
+    --muted: 0 0% 20%;
     --muted-foreground: 0 0% 70%;
 
-    --accent: 340 80% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 28 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 280 15% 25%;
-    --input: 280 15% 25%;
-    --ring: 0 85% 60%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 28 100% 50%;
 
     --radius: 0.75rem;
 
-    /* Custom ANONS Colors */
-    --anons-red: 0 85% 60%;
-    --anons-red-dark: 0 75% 45%;
-    --anons-purple: 280 60% 35%;
-    --anons-purple-dark: 300 40% 15%;
-    --anons-green: 120 60% 50%;
-    --anons-pink: 320 70% 60%;
-    --anons-blue: 220 70% 60%;
+    /* Custom ANONS Colors - Reference Exact */
+    --anons-orange: 28 100% 50%;
+    --anons-orange-dark: 28 80% 40%;
+    --anons-black: 0 0% 7%;
+    --anons-dark-gray: 0 0% 15%;
+    --anons-gray: 0 0% 25%;
+    --anons-white: 0 0% 100%;
+    --anons-light-gray: 0 0% 90%;
     
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--anons-purple-dark)), hsl(var(--anons-red-dark)));
+    /* Gradients - Reference Colors */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--anons-black)), hsl(var(--anons-dark-gray)));
     --gradient-card: linear-gradient(180deg, hsl(var(--card)), hsl(var(--secondary)));
-    --gradient-button: linear-gradient(135deg, hsl(var(--anons-red)), hsl(var(--accent)));
+    --gradient-button: linear-gradient(135deg, hsl(var(--anons-orange)), hsl(var(--anons-orange-dark)));
     
-    /* Shadows */
-    --shadow-glow: 0 0 30px hsl(var(--anons-red) / 0.3);
-    --shadow-card: 0 10px 30px -10px hsl(0 0% 0% / 0.5);
+    /* Shadows - Reference Colors */
+    --shadow-glow: 0 0 30px hsl(var(--anons-orange) / 0.4);
+    --shadow-card: 0 10px 30px -10px hsl(0 0% 0% / 0.6);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,25 +73,25 @@ All colors MUST be HSL.
 
   .dark {
     /* Same as light mode for ANONS dark theme */
-    --background: 300 20% 8%;
-    --foreground: 0 0% 95%;
-    --card: 300 15% 12%;
-    --card-foreground: 0 0% 95%;
-    --popover: 300 15% 12%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 85% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 280 25% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 280 15% 20%;
+    --background: 0 0% 7%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 28 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 20%;
     --muted-foreground: 0 0% 70%;
-    --accent: 340 80% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 28 100% 50%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-    --border: 280 15% 25%;
-    --input: 280 15% 25%;
-    --ring: 0 85% 60%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 28 100% 50%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -119,23 +119,23 @@ All colors MUST be HSL.
 @layer components {
   .anons-title {
     @apply text-6xl md:text-8xl font-black tracking-wider;
-    background: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--anons-red)));
+    background: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--anons-orange)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 30px hsl(var(--anons-red) / 0.5);
+    text-shadow: 0 0 30px hsl(var(--anons-orange) / 0.5);
   }
   
   .mint-button {
     @apply px-8 py-4 rounded-lg font-bold text-xl transition-all duration-300;
     background: var(--gradient-button);
     box-shadow: var(--shadow-glow);
-    border: 2px solid hsl(var(--anons-red));
+    border: 2px solid hsl(var(--anons-orange));
   }
   
   .mint-button:hover {
     @apply scale-105;
-    box-shadow: 0 0 40px hsl(var(--anons-red) / 0.6);
+    box-shadow: 0 0 40px hsl(var(--anons-orange) / 0.6);
   }
   
   .nft-card {
@@ -147,8 +147,8 @@ All colors MUST be HSL.
   
   .nft-card:hover {
     @apply scale-105;
-    border-color: hsl(var(--anons-red));
-    box-shadow: 0 0 20px hsl(var(--anons-red) / 0.3);
+    border-color: hsl(var(--anons-orange));
+    box-shadow: 0 0 20px hsl(var(--anons-orange) / 0.3);
   }
   
   .progress-bar {
@@ -159,6 +159,6 @@ All colors MUST be HSL.
   .progress-fill {
     @apply h-full transition-all duration-500;
     background: var(--gradient-button);
-    box-shadow: 0 0 10px hsl(var(--anons-red) / 0.5);
+    box-shadow: 0 0 10px hsl(var(--anons-orange) / 0.5);
   }
 }

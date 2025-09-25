@@ -3,6 +3,7 @@ import { WalletConnection } from '@/components/WalletConnection';
 import { MintSection } from '@/components/MintSection';
 import { CollectionsGrid } from '@/components/CollectionsGrid';
 import { Footer } from '@/components/Footer';
+import anonsLogo from '@/assets/anons-logo.png';
 
 const Index = () => {
   const [walletConnected, setWalletConnected] = useState(false);
@@ -40,9 +41,13 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative py-16">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="anons-title mb-8">
-            ANONS
-          </h1>
+          <div className="mb-8">
+            <img 
+              src={anonsLogo} 
+              alt="ANONS" 
+              className="mx-auto max-w-lg w-full h-auto"
+            />
+          </div>
           <div className="absolute top-4 right-8 w-16 h-16 bg-white rounded-full flex items-center justify-center">
             <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
               <div className="text-white text-2xl">💀</div>
