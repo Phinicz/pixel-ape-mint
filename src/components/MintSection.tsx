@@ -68,61 +68,60 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
 
       {/* Right side - Mint Interface */}
       <div className="space-y-6">
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-8 border border-border">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-4 h-4 rounded-full bg-red-500 animate-pulse"></div>
-            <h2 className="text-3xl font-black text-foreground">MINT</h2>
+        <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-8 border border-red-500">
+          <div className="flex items-center space-x-2 mb-6">
+            <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs">▲</span>
+            </div>
+            <h2 className="text-4xl font-black text-white">MINT</h2>
           </div>
-
-          <p className="text-muted-foreground mb-6 leading-relaxed">
-            LOREM IPSUM DOLOR SIT AMET CONSECTETUR ADIPISCING ELIT SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA UT ENIM AD MINIM VENIAM QUIS NOSTRUD
+          
+          <p className="text-gray-300 mb-8 leading-relaxed">
+            Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor 
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis 
+            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
-
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="text-center p-4 bg-secondary/50 rounded-lg">
-              <div className="text-2xl font-bold text-red-500">{mintPrice} ETH</div>
-              <div className="text-sm text-muted-foreground">MINT PRICE</div>
+          
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="text-center">
+              <div className="mint-button text-black cursor-pointer inline-block">
+                MINT PRICE
+                <div className="text-sm font-normal">5 AVAX</div>
+              </div>
             </div>
-            <div className="text-center p-4 bg-secondary/50 rounded-lg">
-              <div className="text-2xl font-bold text-green-500">{maxSupply - currentSupply}</div>
-              <div className="text-sm text-muted-foreground">SUPPLY</div>
+            <div className="text-center">
+              <div className="mint-button text-black cursor-pointer inline-block">
+                SUPPLY
+                <div className="text-sm font-normal">4444</div>
+              </div>
             </div>
           </div>
-
+          
           <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-semibold">Progress</span>
-              <span className="text-sm text-muted-foreground">{currentSupply}/{maxSupply}</span>
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-300">Progress</span>
+              <span className="text-white font-bold">3333/4444</span>
             </div>
             <div className="progress-bar">
               <div 
                 className="progress-fill" 
-                style={{ width: `${progressPercentage}%` }}
+                style={{ width: '75%' }}
               ></div>
             </div>
           </div>
-
-          <div className="flex items-center gap-4 mb-6">
-            <Input
-              type="number"
-              min="1"
-              max="10"
-              value={mintAmount}
-              onChange={(e) => setMintAmount(Number(e.target.value))}
-              className="w-20 text-center font-bold"
-            />
-            <Button
-              onClick={handleMint}
-              disabled={isMinting}
-              className="mint-button flex-1"
+          
+          {connected ? (
+            <button className="mint-button w-full text-black">
+              MINT NOW
+            </button>
+          ) : (
+            <button 
+              onClick={onConnectWallet}
+              className="mint-button w-full text-black"
             >
-              {isMinting ? 'MINTING...' : connected ? `MINT ${mintAmount}` : 'CONNECT WALLET'}
-            </Button>
-          </div>
-
-          <div className="text-center text-sm text-muted-foreground">
-            Total: {(mintPrice * mintAmount).toFixed(3)} ETH + gas
-          </div>
+              CONNECT WALLET
+            </button>
+          )}
         </div>
       </div>
     </div>

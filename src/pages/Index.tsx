@@ -48,11 +48,6 @@ const Index = () => {
               className="mx-auto max-w-lg w-full h-auto"
             />
           </div>
-          <div className="absolute top-4 right-8 w-16 h-16 bg-white rounded-full flex items-center justify-center">
-            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-              <div className="text-white text-2xl">💀</div>
-            </div>
-          </div>
         </div>
       </section>
 
