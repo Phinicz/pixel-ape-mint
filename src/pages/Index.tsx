@@ -19,8 +19,46 @@ const Index = () => {
     setWalletAddress(undefined);
   };
 
-  const handleConnectWallet = () => {
-    // This will trigger the wallet connection component
+  const handleConnectWallet = async () => {
+    if (typeof window.ethereum === 'undefined') {
+      alert('Please install MetaMask to connect your wallet');
+      return;
+    }
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (accounts && accounts.length > 0) {
+        setWalletConnected(true);
+        setWalletAddress(accounts[0]);
+      }
+
+      const targetChainId = '0xa86a'; // Avalanche C-Chain Mainnet
+      const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      if (currentChainId !== targetChainId) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: targetChainId }],
+          });
+        } catch (switchError: any) {
+          if (switchError.code === 4902) {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: targetChainId,
+                chainName: 'Avalanche C-Chain',
+                nativeCurrency: { name: 'Avalanche', symbol: 'AVAX', decimals: 18 },
+                rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+                blockExplorerUrls: ['https://snowtrace.io'],
+              }],
+            });
+          } else {
+            throw switchError;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to connect wallet:', error);
+    }
   };
 
   return (

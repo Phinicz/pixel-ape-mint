@@ -31,6 +31,32 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
           method: 'eth_requestAccounts',
         });
         if (accounts.length > 0) {
+          // Ensure Avalanche C-Chain
+          const targetChainId = '0xa86a'; // Avalanche C-Chain Mainnet
+          const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+          if (currentChainId !== targetChainId) {
+            try {
+              await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: targetChainId }],
+              });
+            } catch (switchError: any) {
+              if (switchError.code === 4902) {
+                await window.ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [{
+                    chainId: targetChainId,
+                    chainName: 'Avalanche C-Chain',
+                    nativeCurrency: { name: 'Avalanche', symbol: 'AVAX', decimals: 18 },
+                    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+                    blockExplorerUrls: ['https://snowtrace.io'],
+                  }],
+                });
+              } else {
+                throw switchError;
+              }
+            }
+          }
           onConnect(accounts[0]);
         }
       } catch (error) {
