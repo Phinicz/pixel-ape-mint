@@ -22,3 +22,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Hardhat & Solidity build artifacts
+artifacts/
+cache/
+typechain/
+coverage/
+.env
+.env.local
+.env.*.local
+*.tsbuildinfo
+
+# Hardhat/Forge output (if you use Foundry too)
+out/
+
+# Hardhat log files
+hardhat.log
