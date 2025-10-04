@@ -1,8 +1,8 @@
-const { upgrades, run } = require("hardhat");
+import { run, upgrades } from "hardhat";
 
 async function main() {
   // Replace with your deployed proxy address
-  const proxyAddress = "YOUR_DEPLOYED_PROXY_ADDRESS";
+  const proxyAddress = "0x9fB2c4e3D09d8f3d4550c1A87e24528C09f313dB";
 
   // Get implementation address
   const implAddress = await upgrades.erc1967.getImplementationAddress(
