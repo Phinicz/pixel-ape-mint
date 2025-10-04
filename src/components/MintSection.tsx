@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useAccount, useConnect, useReadContract, useWriteContract } from "wagmi";
 import { useToast } from '@/hooks/use-toast';
 import roughDraftApe from '@/assets/apes/rough-draft-ape-1.png';
+import { getContractConfig } from '@/constants';
 
 interface MintSectionProps {
   connected: boolean;
@@ -13,11 +13,41 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
   const [mintAmount, setMintAmount] = useState(1);
   const [isMinting, setIsMinting] = useState(false);
   const { toast } = useToast();
+  const { connectors, connect } = useConnect()
+  const { address, chainId } = useAccount()
   
-  const maxSupply = 4444;
-  const currentSupply = 3333;
+  // const maxSupply = 4444;
+  // const currentSupply = 3333;
+
+  const anonsConfig = getContractConfig('anons')
+  const { data: maxSupply} = useReadContract({
+    abi: anonsConfig.abi,
+    address: anonsConfig.address,
+    functionName: 'MAX_SUPPLY',
+    args: [],
+  }) as { data: bigint};
+
+  const { data: currentSupply} = useReadContract({
+    ...anonsConfig,
+    functionName: 'totalSupply',
+    args: [],
+  }) as { data: bigint};
+
   const mintPrice = 0.025; // ETH
-  const progressPercentage = (currentSupply / maxSupply) * 100;
+  const progressPercentage = Number(currentSupply) / Number(maxSupply) * 100;
+  
+  // Number(currentSupply)}/{Number(maxSupply)
+  const { data: mintHash, writeContractAsync: mint, isPending: loadingMint} = useWriteContract();
+  
+  const handleConnectWagmi = () => {
+    console.log(connectors);
+    
+    try {
+      connect({ connector: connectors[0] });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleMint = async () => {
     if (!connected) {
@@ -36,6 +66,15 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
       
       // In a real implementation, this would call your smart contract
       await new Promise(resolve => setTimeout(resolve, 3000));
+      /*
+        const success = await mint({
+          ...anonsConfig,
+          functionName: 'mint',
+          args: [transferAddress, parseUnits(transferAmount, 18)],
+          gas: BigInt(1000000),
+          value: parseEther((mintPrice * mintAmount).toString()),
+        })
+      */
       
       toast({
         title: "Mint successful! 🎉",
@@ -92,7 +131,7 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
             <div className="text-center">
               <div className="mint-button text-black cursor-pointer inline-block">
                 SUPPLY
-                <div className="text-sm font-normal">4444</div>
+                <div className="text-sm font-normal">{Number(maxSupply)}</div>
               </div>
             </div>
           </div>
@@ -100,12 +139,12 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-gray-300">Progress</span>
-              <span className="text-white font-bold">3333/4444</span>
+              <span className="text-white font-bold">{Number(currentSupply)}/{Number(maxSupply)}</span>
             </div>
             <div className="progress-bar">
               <div 
                 className="progress-fill" 
-                style={{ width: '75%' }}
+                style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
           </div>
@@ -116,7 +155,7 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
             </button>
           ) : (
             <button 
-              onClick={onConnectWallet}
+              onClick={handleConnectWagmi}
               className="mint-button w-full text-black"
             >
               CONNECT WALLET
