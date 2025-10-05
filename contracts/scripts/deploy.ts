@@ -10,8 +10,10 @@ async function main() {
 
   // Deploy proxy
   const ANONS = await ethers.getContractFactory("ANONS");
-  console.log([name, symbol, initialMintPrice, initialMaxPerWallet, initialBaseURI]);
+  const anons = ANONS.attach("0x9fB2c4e3D09d8f3d4550c1A87e24528C09f313dB");
+  await anons.setMintPrice(ethers.utils.parseEther("0.025"));
 
+  /*
   const anons = await upgrades.deployProxy(
     ANONS,
     [name, symbol, initialMintPrice, initialMaxPerWallet, initialBaseURI],
@@ -21,9 +23,6 @@ async function main() {
 
   const proxyAddress = anons.address;
   console.log("ANONS proxy deployed to:", proxyAddress);
-  // ANONS proxy deployed to: 0x9fB2c4e3D09d8f3d4550c1A87e24528C09f313dB
-  // Implementation address: 0xD2b68200e38ef343Ca2eC0E9a850b02FABE3aB8a
-
   // Optionally verify after deployment (wait a few blocks first)
   // await run("verify:verify", { address: proxyAddress });
 
@@ -32,6 +31,7 @@ async function main() {
     proxyAddress
   );
   console.log("Implementation address:", implAddress);
+  */
 }
 
 main().catch((error) => {

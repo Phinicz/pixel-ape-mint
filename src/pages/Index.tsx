@@ -4,20 +4,36 @@ import { MintSection } from '@/components/MintSection';
 import { CollectionsGrid } from '@/components/CollectionsGrid';
 import { Footer } from '@/components/Footer';
 import anonsLogo from '@/assets/anons-logo.png';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { DefaultChainId } from '@/constants';
 
 const Index = () => {
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string>();
+  const { connectors, connect } = useConnect()
+  const {disconnect} = useDisconnect()
+  const { address, chainId, status } = useAccount()
 
-  const handleWalletConnect = (address: string) => {
-    setWalletConnected(true);
-    setWalletAddress(address);
+  const handleWalletConnect = () => {
+    try {
+      connect({
+        connector: connectors[0],
+        chainId: DefaultChainId, // Avalanche C-Chain Mainnet
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleWalletDisconnect = () => {
-    setWalletConnected(false);
-    setWalletAddress(undefined);
+    try {
+      disconnect();
+    } catch (error) {
+      console.log(error);
+    }
   };
+  /*
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string>();
+
 
   const handleConnectWallet = async () => {
     if (typeof window.ethereum === 'undefined') {
@@ -60,6 +76,7 @@ const Index = () => {
       console.error('Failed to connect wallet:', error);
     }
   };
+  */
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,12 +84,7 @@ const Index = () => {
       <header className="relative z-10 p-6">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="text-2xl font-black text-foreground">ANONS</div>
-          <WalletConnection
-            onConnect={handleWalletConnect}
-            onDisconnect={handleWalletDisconnect}
-            connected={walletConnected}
-            address={walletAddress}
-          />
+          <WalletConnection/>
         </div>
       </header>
 
@@ -92,10 +104,7 @@ const Index = () => {
       {/* Mint Section */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <MintSection 
-            connected={walletConnected}
-            onConnectWallet={handleConnectWallet}
-          />
+          <MintSection/>
         </div>
       </section>
 

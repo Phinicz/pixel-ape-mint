@@ -4,7 +4,7 @@ import { injected, metaMask } from 'wagmi/connectors'
 
 export const config = createConfig({
   chains: [
-    //avalanche,
+    avalanche,
     avalancheFuji
   ],
   connectors: [
@@ -12,7 +12,7 @@ export const config = createConfig({
     injected(),
   ],
   transports: {
-    //[avalanche.id]: http(),
+    [avalanche.id]: http(),
     [avalancheFuji.id]: http(),
   },
 })

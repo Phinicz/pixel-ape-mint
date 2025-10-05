@@ -1,28 +1,34 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { DefaultChainId } from '@/constants';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
-// Extend Window interface to include ethereum
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
 
-interface WalletConnectionProps {
-  onConnect: (address: string) => void;
-  onDisconnect: () => void;
-  connected: boolean;
-  address?: string;
-}
+export const WalletConnection: React.FC = () => {
+  const { connectors, connect, isPending: isConnecting } = useConnect()
+  const {disconnect} = useDisconnect()
+  const { address, chainId, status } = useAccount()
+  const connected = status === 'connected';
 
-export const WalletConnection: React.FC<WalletConnectionProps> = ({
-  onConnect,
-  onDisconnect,
-  connected,
-  address
-}) => {
-  const [isConnecting, setIsConnecting] = useState(false);
+  const connectWallet = () => {
+    try {
+      connect({
+        connector: connectors[0],
+        chainId: DefaultChainId, // Avalanche C-Chain Mainnet
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const onDisconnect = () => {
+    try {
+      disconnect();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /*
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
       setIsConnecting(true);
@@ -68,6 +74,7 @@ export const WalletConnection: React.FC<WalletConnectionProps> = ({
       alert('Please install MetaMask to connect your wallet');
     }
   };
+  */
 
   const formatAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;

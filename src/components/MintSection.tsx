@@ -2,38 +2,44 @@ import { useState } from 'react';
 import { useAccount, useConnect, useReadContract, useWriteContract } from "wagmi";
 import { useToast } from '@/hooks/use-toast';
 import roughDraftApe from '@/assets/apes/rough-draft-ape-1.png';
-import { getContractConfig } from '@/constants';
+import { DefaultChainId, getContractConfig } from '@/constants';
+import { parseEther } from 'viem';
+import { avalancheFuji } from 'viem/chains';
 
-interface MintSectionProps {
-  connected: boolean;
-  onConnectWallet: () => void;
-}
 
-export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWallet }) => {
+export const MintSection: React.FC = () => {
   const [mintAmount, setMintAmount] = useState(1);
   const [isMinting, setIsMinting] = useState(false);
   const { toast } = useToast();
   const { connectors, connect } = useConnect()
-  const { address, chainId } = useAccount()
+  const { address, chainId, status } = useAccount()
+  const connected = status === 'connected';
   
-  // const maxSupply = 4444;
-  // const currentSupply = 3333;
-
   const anonsConfig = getContractConfig('anons')
-  const { data: maxSupply} = useReadContract({
+  const { data: maxSupplyData} = useReadContract({
     abi: anonsConfig.abi,
     address: anonsConfig.address,
     functionName: 'MAX_SUPPLY',
     args: [],
   }) as { data: bigint};
+  const maxSupply = maxSupplyData || BigInt(4444);
 
-  const { data: currentSupply} = useReadContract({
+  const { data: currentSupplyData} = useReadContract({
     ...anonsConfig,
     functionName: 'totalSupply',
     args: [],
   }) as { data: bigint};
+  const currentSupply = currentSupplyData || BigInt(0);
 
-  const mintPrice = 0.025; // ETH
+  const { data: mintPriceBN} = useReadContract({
+    abi: anonsConfig.abi,
+    address: anonsConfig.address,
+    functionName: 'mintPrice',
+    args: [],
+  }) as { data: bigint};
+  const mintPrice = mintPriceBN ? Number(mintPriceBN) / 1e18 : 5 ; // Convert from wei to ether
+
+  //const mintPrice = 0.025; // ETH
   const progressPercentage = Number(currentSupply) / Number(maxSupply) * 100;
   
   // Number(currentSupply)}/{Number(maxSupply)
@@ -41,9 +47,11 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
   
   const handleConnectWagmi = () => {
     console.log(connectors);
-    
     try {
-      connect({ connector: connectors[0] });
+      connect({
+        connector: connectors[0],
+        chainId: DefaultChainId
+      });
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +59,7 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
 
   const handleMint = async () => {
     if (!connected) {
-      onConnectWallet();
+      handleConnectWagmi();
       return;
     }
 
@@ -63,24 +71,20 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
         title: "Minting in progress...",
         description: `Minting ${mintAmount} ANONS NFT${mintAmount > 1 ? 's' : ''}`,
       });
+      console.log(chainId);
       
-      // In a real implementation, this would call your smart contract
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      /*
-        const success = await mint({
-          ...anonsConfig,
-          functionName: 'mint',
-          args: [transferAddress, parseUnits(transferAmount, 18)],
-          gas: BigInt(1000000),
-          value: parseEther((mintPrice * mintAmount).toString()),
-        })
-      */
-      
+      const success = await mint({
+        ...anonsConfig,
+        functionName: 'mint',
+        args: [],
+        value: parseEther((mintPrice * mintAmount).toString()),
+      });
       toast({
         title: "Mint successful! 🎉",
         description: `Successfully minted ${mintAmount} ANONS NFT${mintAmount > 1 ? 's' : ''}`,
       });
     } catch (error) {
+      console.log(error);
       toast({
         title: "Mint failed",
         description: "Something went wrong. Please try again.",
@@ -125,13 +129,13 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
             <div className="text-center">
               <div className="mint-button text-black cursor-pointer inline-block">
                 MINT PRICE
-                <div className="text-sm font-normal">5 AVAX</div>
+                <div className="text-sm font-normal">{mintPrice.toString()} AVAX</div>
               </div>
             </div>
             <div className="text-center">
               <div className="mint-button text-black cursor-pointer inline-block">
                 SUPPLY
-                <div className="text-sm font-normal">{Number(maxSupply)}</div>
+                <div className="text-sm font-normal">{Number(maxSupply).toString()}</div>
               </div>
             </div>
           </div>
@@ -149,8 +153,8 @@ export const MintSection: React.FC<MintSectionProps> = ({ connected, onConnectWa
             </div>
           </div>
           
-          {connected ? (
-            <button className="mint-button w-full text-black">
+          {status=="connected" ? (
+            <button className="mint-button w-full text-black" onClick={handleMint} disabled={isMinting}>
               MINT NOW
             </button>
           ) : (
