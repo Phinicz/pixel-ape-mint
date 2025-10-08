@@ -120,9 +120,10 @@ export const MintSection: React.FC = () => {
           </div>
           
           <p className="text-gray-300 mb-8 leading-relaxed">
-            Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor 
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis 
-            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            4444 faceless rebels on Avalanche.
+            More than NFTs, Anons are culture, creativity and community in motion. 
+            Masked yet united, they embody the spirit of builders, traders, and dreamers who choose imagination over identity. 
+            We are many, We are Anons.
           </p>
           
           <div className="grid grid-cols-2 gap-4 mb-8">
