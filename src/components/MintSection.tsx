@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import roughDraftApe from '@/assets/apes/rough-draft-ape-1.png';
 import { DefaultChainId, getContractConfig } from '@/constants';
 import { parseEther } from 'viem';
-import { avalancheFuji } from 'viem/chains';
+import proofs from '../assets/proofs.json'; // Import generated proofs
 
 
 export const MintSection: React.FC = () => {
@@ -24,11 +24,11 @@ export const MintSection: React.FC = () => {
   }) as { data: bigint};
   const maxSupply = maxSupplyData || BigInt(4444);
 
-  const { data: currentSupplyData} = useReadContract({
+  const { data: currentSupplyData, refetch: refetchSupply} = useReadContract({
     ...anonsConfig,
     functionName: 'totalSupply',
     args: [],
-  }) as { data: bigint};
+  }) ;
   const currentSupply = currentSupplyData || BigInt(0);
 
   const { data: mintPriceBN} = useReadContract({
@@ -41,12 +41,20 @@ export const MintSection: React.FC = () => {
 
   //const mintPrice = 0.025; // ETH
   const progressPercentage = Number(currentSupply) / Number(maxSupply) * 100;
+
+  const proof = address ? (proofs as Record<string, string[]>)[address.toLowerCase()] : [];
+  const { data: canMintRes} = useReadContract({
+    abi: anonsConfig.abi,
+    address: anonsConfig.address,
+    functionName: 'canMint',
+    args: [address, proof ],
+  }) as { data: bigint};
+  const canMint = Boolean(canMintRes);
   
   // Number(currentSupply)}/{Number(maxSupply)
   const { data: mintHash, writeContractAsync: mint, isPending: loadingMint} = useWriteContract();
   
   const handleConnectWagmi = () => {
-    console.log(connectors);
     try {
       connect({
         connector: connectors[0],
@@ -62,7 +70,14 @@ export const MintSection: React.FC = () => {
       handleConnectWagmi();
       return;
     }
-
+    if (proof.length === 0) {
+      toast({
+        title: "Cannot mint",
+        description: "You are not on the whitelist.",
+        variant: "destructive",
+      });
+      return;
+    }
     setIsMinting(true);
     
     // Simulate minting process
@@ -76,13 +91,14 @@ export const MintSection: React.FC = () => {
       const success = await mint({
         ...anonsConfig,
         functionName: 'mint',
-        args: [],
+        args: [proof],
         value: parseEther((mintPrice * mintAmount).toString()),
       });
       toast({
         title: "Mint successful! 🎉",
         description: `Successfully minted ${mintAmount} ANONS NFT${mintAmount > 1 ? 's' : ''}`,
       });
+      refetchSupply();
     } catch (error) {
       console.log(error);
       toast({
@@ -155,9 +171,17 @@ export const MintSection: React.FC = () => {
           </div>
           
           {status=="connected" ? (
-            <button className="mint-button w-full text-black" onClick={handleMint} disabled={isMinting}>
-              MINT NOW
-            </button>
+            <>
+              {canMint ? (
+                <button className="mint-button w-full text-black" onClick={handleMint} disabled={isMinting}>
+                  MINT NOW
+                </button>
+              ) : (
+                <div className="w-full text-gray-300 ">
+                  YOU ARE NOT ON THE WHITELIST
+                </div>
+              )}
+            </>
           ) : (
             <button 
               onClick={handleConnectWagmi}

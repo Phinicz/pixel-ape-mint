@@ -59,7 +59,7 @@ const devNetworks: Map<number, NetworkData> = new Map([
       },
       addresses: {
         usdt: "0x82DCEC6aa3c8BFE2C96d40d8805EE0dA15708643",
-        anons: '0x9fB2c4e3D09d8f3d4550c1A87e24528C09f313dB'
+        anons: '0xC1fF3308459D7CF4F5CdF50a8d1F97A142088536'
       },
     },
   ],

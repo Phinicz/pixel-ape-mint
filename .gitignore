@@ -38,3 +38,5 @@ out/
 
 # Hardhat log files
 hardhat.log
+
+whitelist.csv

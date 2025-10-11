@@ -2,21 +2,22 @@ import { ethers, upgrades } from "hardhat";
 
 async function main() {
   // Contract constructor args
+  const merkleRoot = "0x13e38abb96432d108241412b3647b67da069a6081d7d63351987e5bb4a4e8b12"
   const name = "ANONS";
   const symbol = "ANONS";
   const initialMintPrice = ethers.utils.parseEther("5"); // 5 AVAX
-  const initialMaxPerWallet = 100;
+  const initialMaxPerWallet = 10;
   const initialBaseURI = "ipfs://anons/";
 
   // Deploy proxy
   const ANONS = await ethers.getContractFactory("ANONS");
-  const anons = ANONS.attach("0x9fB2c4e3D09d8f3d4550c1A87e24528C09f313dB");
-  await anons.setMintPrice(ethers.utils.parseEther("0.025"));
+  const anons = ANONS.attach("0xC1fF3308459D7CF4F5CdF50a8d1F97A142088536");
+  await anons.setMerkleRoot(merkleRoot);
 
   /*
   const anons = await upgrades.deployProxy(
     ANONS,
-    [name, symbol, initialMintPrice, initialMaxPerWallet, initialBaseURI],
+    [merkleRoot, name, symbol, initialMintPrice, initialMaxPerWallet, initialBaseURI],
     { initializer: "initialize" }
   );
   await anons.deployed();
